@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import accounts
 from pathlib import Path
 
-import rest_framework
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +31,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'rest_framework',
-    'knox'
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -55,6 +57,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'accountsAPI.urls'
+
 
 
 
@@ -135,11 +138,14 @@ ACCOUNT_NUMBER_START_FROM = 1000000000
 MINIMUM_DEPOSIT_AMOUNT = 10
 MINIMUM_WITHDRAWAL_AMOUNT = 10
 
+AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }

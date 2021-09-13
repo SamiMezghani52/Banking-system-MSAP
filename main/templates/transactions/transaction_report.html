@@ -1,0 +1,7 @@
+{% extends 'core/base.html'%}
+{% block content %}
+    {% if user.is_authenticated %}
+        {{ message }}
+    {% endif %}
+    <p>transaction report</p>
+{% endblock %}

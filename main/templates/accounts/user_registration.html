@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+
+{% block head_title %}Banking System{% endblock %}
+
+{% block content %}
+<h1 class="font-mono font-bold text-3xl text-center pb-5 pt-10">Register</h1>
+<hr />
+<div class="w-full mt-10">
+    <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    First Name
+                </label>
+                <input name="firstname" type="text" placeholder="Your first Name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            </div>
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Last Name
+                </label>
+                <input name="lastname" type="text" placeholder="Your last Name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            </div>
+        </div>
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Email
+                </label>
+                <input name="Email" type="text" placeholder="user@example.com" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+            </div>
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    password
+                </label>
+                <input name="password" type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+            </div>
+        </div>
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                   Username
+                </label>
+                <input name="userName" type="text" placeholder="Your username" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+            </div>
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                   Maximum withdrawal_amount
+                </label>
+                <input name="maximumWithdrawalAmount" type="text" placeholder="Set an amount" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+            </div>
+        </div>
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                   Account number
+                </label>
+                <input name="accountNumber" type="text" placeholder="Set an amount" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+            </div>
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                   Gender
+                </label>
+                <select name="gender" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 
+                'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                    <option value="M">Homme</option>
+                    <option value="F">Femme</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex items-center justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Register
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
