@@ -1,5 +1,4 @@
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.views import APIView
 from .models import  UserBankAccount
 from .utils import create_user_account, get_and_authenticate_user
 from . import serializers
@@ -60,25 +59,20 @@ class AuthViewSet(viewsets.GenericViewSet):
     def get_serializer_class(self):
         if not isinstance(self.serializer_classes, dict):
             raise ImproperlyConfigured("serializer classes should be a dict mapping")
-        
         if self.action in self.serializer_classes.keys():
             return self.serializer_classes[self.action]
         return super().get_serializer_class()
 
-    
 
-
-def BankAcountTypeAPI(request):
-    if request.method == 'GET':
-        account_types = BankAccountType.objects.all()
-        account_types_serializer = serializers.BankAccountTypeSerializer(account_types, many=True)
-        return JsonResponse(account_types_serializer.data, safe=False)
-
+def authenticationTest(request):
+    test = JSONParser().parse(request)
+    user = User.objects.filter(id=test["id"])
+    return Response(data=user.is_authenticated)
 
 @csrf_exempt
 def UserBankAccountsAPI(request, id=0):
     if request.method == 'GET':
-        user_accounts = UserBankAccount.objects.get(account_no=id)
+        user_accounts = UserBankAccount.objects.get(user=id)
         user_accounts_serializer = serializers.UserBankAccountSerializer(user_accounts)
         return JsonResponse(user_accounts_serializer.data, safe=False)
 
@@ -92,7 +86,7 @@ def UserBankAccountsAPI(request, id=0):
 
     elif request.method == 'PUT':
         user_account_data = JSONParser().parse(request)
-        user_account = UserBankAccount.objects.get(account_no=user_account_data["account_no"])
+        user_account = UserBankAccount.objects.get(user=user_account_data["user"])
         user_account_serializer = serializers.UserBankAccountSerializer(user_account, data=user_account_data)
         if user_account_serializer.is_valid():
             user_account_serializer.save()

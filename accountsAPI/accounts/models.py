@@ -22,7 +22,7 @@ class UserBankAccount(models.Model):
     account_no = models.PositiveIntegerField(unique=True)
     maximum_withdrawal_amount =  models.DecimalField(decimal_places=2, max_digits=12)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE)
-    balance = models.DecimalField(default=0, max_digits=12, decimal_places=2)
+    balance = models.DecimalField(decimal_places=2, max_digits=12)
     initial_deposit_date = models.DateField(null=True, blank=True)
 
 

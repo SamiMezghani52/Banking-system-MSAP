@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
 import requests
 
 from django.views.generic import TemplateView
-
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -56,8 +57,47 @@ class UserRegister(TemplateView):
 
 class userLoginView(TemplateView):
     template_name="accounts/user_login.html"
-    auth_token = ''
-    
-    def login(self, request):
-        pass
-    
+    isAuthenticated = False
+    req = ''
+
+    def post(self, request):
+        if request.method == 'POST':
+            if self.isAuthenticated == False:
+                Email = request.POST.get('email')
+                Password = request.POST.get('password')
+
+                data = {
+                    "email": Email,
+                    "password": Password
+                }
+                    
+                print(data)
+
+                self.req = requests.post('http://127.0.0.1:8000/api/auth/login', json=data)
+
+                if self.req.status_code == 200:
+                    self.isAuthenticated = True
+                    messages.success(self.request, 'Successfully Logged in as ' + self.req.json()["first_name"])
+                    return redirect('transaction-report')
+                messages.warning(self.request, self.req.json()[0])
+                return redirect('login')
+            elif request.POST.get('logOut') == "true" :
+                print("logging out")
+                header = {"Authorization": "Token " + self.req.json()["auth_token"]}
+                print(header)
+                logout_req = requests.post('http://127.0.0.1:8000/api/auth/logout', headers=header)
+                if logout_req.status_code == 200:
+                    self.isAuthenticated = False
+                    messages.success(request, 'Successfully Logged out')
+                    return redirect('home')
+
+
+
+def transactionReport(request):
+    return render(request, "transactions/transaction_report.html")
+
+def Withdraw(request):
+    return render(request, "transactions/withdraw.html")
+
+def Deposit(request):
+    return render(request, "transactions/deposit.html")
