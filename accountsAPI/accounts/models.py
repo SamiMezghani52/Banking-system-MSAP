@@ -19,7 +19,7 @@ class User(AbstractUser):
     
 class UserBankAccount(models.Model):
     user = models.OneToOneField(User, related_name='account', on_delete=models.CASCADE)
-    account_no = models.PositiveIntegerField(unique=True)
+    account_no = models.PositiveIntegerField()
     maximum_withdrawal_amount =  models.DecimalField(decimal_places=2, max_digits=12)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE)
     balance = models.DecimalField(decimal_places=2, max_digits=12)

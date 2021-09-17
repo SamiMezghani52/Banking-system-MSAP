@@ -5,7 +5,10 @@ class transactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = transactionModel
         fields = (
+
             'user_id', 
             'amount',
             'transaction_type',
+            'balance_after_transaction',
+            'timestamp'
         )

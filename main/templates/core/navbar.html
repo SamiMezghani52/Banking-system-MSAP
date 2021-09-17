@@ -5,7 +5,7 @@
             <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse font-medium" id="navbarSupportedContent">
-            {% if isAuthenticated == true %}
+            {% if request.user.is_authenticated %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'transaction-report' %}">Transaction report</a>
@@ -24,18 +24,12 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li>
-                                <form class="dropdown-item" method='post'>
-                                    {% csrf_token %}
-                                    <input type="hidden" name="logOut" value="true"/>
-                                    <button type="submit" class="link-button">Logout</button>
-                                </form>
-                            </li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
             {% else %}
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>

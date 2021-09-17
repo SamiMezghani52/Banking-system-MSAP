@@ -36,20 +36,18 @@ def createTransactionAPI(request):
 
         if new_transactions.transaction_type == "D":
             account_data["balance"] = str(float(account_data["balance"])+float(transaction_data["amount"]))
+            transaction_data["balance_after_transaction"] = account_data["balance"]
         else:
             account_data["balance"] = str(float(account_data["balance"])-float(transaction_data["amount"]))
+            transaction_data["balance_after_transaction"] = account_data["balance"]
 
-        #if account["initial_deposit_date"] is None:
-        #    account_data["initial_deposit_date"] = datetime.datetime.now()
-        
-        print(account_data)
-        
+        transaction_data['timestamp'] = datetime.datetime.today().strftime('%d/%m/%Y %H:%M')
         new_transaction_serializer = transactionSerializer(data = transaction_data)
 
         if new_transaction_serializer.is_valid():
             new_transaction_serializer.save()
             account_modified = requests.put('http://127.0.0.1:8000/api/accounts/update/', json=account_data)
-            print(account_modified)
+            print(account_modified.status_code)
             if account_modified.status_code == 200:
                 message = ["transaction done ..."]
                 return JsonResponse(message, safe=False)

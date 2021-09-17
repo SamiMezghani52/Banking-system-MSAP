@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login, logout
 
 import requests
 
@@ -7,10 +8,22 @@ from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 
 
-
-
 def home(request):
-    return render(request, "core/index.html")
+    if request.method == 'POST':
+
+        email = request.POST.get('Email')
+        password = request.POST.get('Password')
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'logged in successfully as '+ get_user_model().objects.get(email=email).username)
+            return redirect('transaction-report')
+        else :
+            messages.warning(request, 'Failed to log in !!')
+            return redirect('home')
+    else :
+        return render(request, "core/index.html")
 
 class UserRegister(TemplateView):
     template_name = "accounts/user_registration.html"
@@ -48,56 +61,103 @@ class UserRegister(TemplateView):
             }
             req2 = requests.post('http://127.0.0.1:8000/api/createAccount/', json=account_data)
 
-        if req2.status_code == 200: 
-            print(req2.json())
+        if req2.status_code == 200:
+            user = get_user_model().objects.create(
+                id = req1.json()["id"],
+                username = Username,
+                email = email,
+                first_name = first_name,
+                last_name = last_name
+            )
+            user.set_password(password)
+            user.save()
             messages.success(self.request, "Account created successfully !")
             return redirect('login')
-        return redirect('home')
+        else :
+            messages.warning(request, req1.json()[0])
+            return redirect('register')
+
+@csrf_exempt
+def userLogin(request):
+    if request.method == 'POST':
+
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=email, password=password)
+        print(user)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'logged in successfully as '+ get_user_model().objects.get(email=email).username)
+            return redirect('transaction-report')
+        else :
+            messages.warning(request, 'Failed to log in !!')
+            return redirect('login')
+    else :
+        return render(request, 'accounts/user_login.html')
+            
 
 
-class userLoginView(TemplateView):
-    template_name="accounts/user_login.html"
-    isAuthenticated = False
-    req = ''
 
-    def post(self, request):
-        if request.method == 'POST':
-            if self.isAuthenticated == False:
-                Email = request.POST.get('email')
-                Password = request.POST.get('password')
 
-                data = {
-                    "email": Email,
-                    "password": Password
-                }
-                    
-                print(data)
-
-                self.req = requests.post('http://127.0.0.1:8000/api/auth/login', json=data)
-
-                if self.req.status_code == 200:
-                    self.isAuthenticated = True
-                    messages.success(self.request, 'Successfully Logged in as ' + self.req.json()["first_name"])
-                    return redirect('transaction-report')
-                messages.warning(self.request, self.req.json()[0])
-                return redirect('login')
-            elif request.POST.get('logOut') == "true" :
-                print("logging out")
-                header = {"Authorization": "Token " + self.req.json()["auth_token"]}
-                print(header)
-                logout_req = requests.post('http://127.0.0.1:8000/api/auth/logout', headers=header)
-                if logout_req.status_code == 200:
-                    self.isAuthenticated = False
-                    messages.success(request, 'Successfully Logged out')
-                    return redirect('home')
-
+def userLogout(request):
+    logout(request)
+    messages.success(request, 'Logged out successfully')
+    return redirect('home')
 
 
 def transactionReport(request):
-    return render(request, "transactions/transaction_report.html")
+    if request.method == 'GET':
+        req = requests.get('http://localhost:8002/transactionsAPI/transactions/'+request.user.id)
+        user_balance = requests.get('http://127.0.0.1:8000/api/account/'+request.user.id)
+        context = {}
+        if req.status_code == 200 and user_balance.status_code == 200:
+            if req.json() == []:
+                messages.warning(request, 'No transactions made')
+            else :
+                print(req.json())
+                context = {
+                    "transactions": req.json(),
+                    "user_balance": user_balance.json()["balance"]
+                }
+        
+    return render(request, "transactions/transaction_report.html", context)
 
 def Withdraw(request):
+    if request.method=='POST':
+        amount = request.POST.get('Amount')
+        
+        transaction_data = {
+            "user_id": request.user.id,
+            "amount": amount,
+            "transaction_type": "W"
+        }
+        print(transaction_data)
+        req = requests.post('http://localhost:8002/transactionsAPI/transactions/create/', json=transaction_data)
+
+        if req.status_code == 200:
+            messages.success(request, amount+'$ Withdraw success')
+            return redirect('transaction-report')
+        else :
+            messages.warning(request,'Withdraw failed')
     return render(request, "transactions/withdraw.html")
 
 def Deposit(request):
+    if request.method=='POST':
+        Amount = request.POST.get('amount')
+        
+        transaction_data = {
+            "user_id": request.user.id,
+            "amount": Amount,
+            "transaction_type": "D"
+        }
+        print(transaction_data)
+        req = requests.post('http://localhost:8002/transactionsAPI/transactions/create/', json=transaction_data)
+
+        if req.status_code == 200:
+            messages.success(request, Amount+'$ Deposit success')
+            return redirect('transaction-report')
+        else :
+            messages.warning(request,'Deposit failed')
     return render(request, "transactions/deposit.html")
