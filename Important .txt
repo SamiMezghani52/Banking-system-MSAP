@@ -1,0 +1,7 @@
+runserver commands
+
+AccountAPI : python manage.py runserver localhost:8000
+transactionAPI : python manage.py runserver localhost:8002
+main : python manage.py runserver localhost:8001
+
+run the three servers before test
