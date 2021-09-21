@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-gray-800">
     <div class="container-fluid">
       <a class="navbar-brand font-semibold text-xl tracking-tight" href="{% url 'home' %}">Banking System</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,9 +22,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Profile
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        <ul class="dropdown-menu bg-gray-800" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item nav-link" href="{% url 'change-password' %}">Change Password</a></li>
+                            <li><a class="dropdown-item nav-link" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     </li>
                 </ul>

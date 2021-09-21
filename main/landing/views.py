@@ -161,3 +161,28 @@ def Deposit(request):
         else :
             messages.warning(request,'Deposit failed')
     return render(request, "transactions/deposit.html")
+
+
+def changePasswordSetting(request):
+    if request.method=='POST':
+        ancient_password = request.POST.get('ancientPassword')
+        new_password = request.POST.get('newPassword')
+        verification = authenticate(request, username=request.user.email, password=ancient_password)
+
+        if verification is None:
+            messages.warning(request, 'Ancient password incorrect ! Please enter the correct password')
+            return redirect('change-password')
+        else :
+            user = get_user_model().objects.get(id=request.user.id)
+            user.set_password(new_password)
+            user.save()
+            user = authenticate(request, username=request.user.email, password=new_password)
+            print(user)
+            login(request, user)
+            messages.success(request, 'Password changed successfully !!')
+            return redirect('transaction-report')
+        
+    return render(request, "accounts/change_password.html")
+
+def changeUsernameSetting(request):
+    pass

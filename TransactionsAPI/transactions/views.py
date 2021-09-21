@@ -3,7 +3,6 @@ import datetime
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from rest_framework.response import Response 
 from rest_framework.parsers import JSONParser 
 
 from .serializers import transactionSerializer

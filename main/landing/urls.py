@@ -9,5 +9,7 @@ urlpatterns = [
         path('logout/', views.userLogout, name='logout'),
         path('transaction_report/', views.transactionReport, name='transaction-report'),
         path('withdraw/', views.Withdraw, name='withdraw'),
-        path('deposit/', views.Deposit, name='deposit')
+        path('deposit/', views.Deposit, name='deposit'),
+        path('profile/changeUsername/', views.changeUsernameSetting,name='change-username'),
+        path('profile/changePassword/', views.changePasswordSetting,name='change-password')
     ]
